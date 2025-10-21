@@ -7,6 +7,10 @@ const port = process.env.PORT || 5000;
 const uri = process.env.MONGO_URI;
 const User = require('./models/user');
 
+app.use(express.json());
+
+const authRoutes = require('./routes/auth');
+app.use('/api/auth', authRoutes);
 
 mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('MongoDB connected'))
