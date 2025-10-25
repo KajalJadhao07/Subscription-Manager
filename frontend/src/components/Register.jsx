@@ -1,6 +1,7 @@
 import { useState } from "react";
-import axios from "axios";
+import { Eye, EyeOff } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import api from "../utils/api";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -15,6 +16,9 @@ export default function Register() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setError("");
@@ -22,7 +26,6 @@ export default function Register() {
   };
 
   const validatePassword = (password) => {
-    // at least 8 chars, uppercase, lowercase, number, special char
     const strongPass =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
     return strongPass.test(password);
@@ -48,7 +51,7 @@ export default function Register() {
     }
 
     try {
-      const res = await axios.post("http://localhost:5000/register", {
+      const res = await api.post("/api/auth/register", {
         name,
         email,
         password,
@@ -56,20 +59,18 @@ export default function Register() {
 
       if (res.status === 200 || res.status === 201) {
         setSuccess("Registration successful! Redirecting to login...");
-        setTimeout(() => navigate("/login"), 2000);
+        setTimeout(() => navigate("/"), 2000);
       }
     } catch (err) {
-      console.error(err);
-      setError(
-        err.response?.data?.msg || "Something went wrong. Please try again."
-      );
+      console.error("Register error:", err.response?.data || err.message);
+      setError(err.response?.data?.msg || "Something went wrong. Please try again.");
     }
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="bg-white shadow-lg rounded-2xl p-8 w-[380px]">
-        <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950 p-6">
+      <div className="bg-white dark:bg-gray-900 w-full max-w-md rounded-2xl shadow-lg p-8">
+        <h2 className="text-2xl font-bold text-center mb-6 text-gray-800 dark:text-white">
           Create Your Account
         </h2>
 
@@ -81,54 +82,83 @@ export default function Register() {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Full Name */}
           <div>
-            <label className="block font-semibold mb-1">Full Name</label>
+            <label className="block font-semibold mb-1 dark:text-gray-300">
+              Full Name
+            </label>
             <input
               type="text"
               name="name"
               placeholder="Enter your name"
               value={formData.name}
               onChange={handleChange}
-              className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
             />
           </div>
 
+          {/* Email */}
           <div>
-            <label className="block font-semibold mb-1">Email</label>
+            <label className="block font-semibold mb-1 dark:text-gray-300">
+              Email
+            </label>
             <input
               type="email"
               name="email"
               placeholder="Enter your email"
               value={formData.email}
               onChange={handleChange}
-              className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
             />
           </div>
 
-          <div>
-            <label className="block font-semibold mb-1">Password</label>
+          {/* Password */}
+          <div className="relative">
+            <label className="block font-semibold mb-1 dark:text-gray-300">
+              Password
+            </label>
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               name="password"
               placeholder="Enter a strong password"
               value={formData.password}
               onChange={handleChange}
-              className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border rounded-lg px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
             />
+            <span
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-9 cursor-pointer text-gray-500 hover:text-gray-700 dark:text-gray-400"
+              title={showPassword ? "Hide password" : "Show password"}
+            >
+              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            </span>
           </div>
 
-          <div>
-            <label className="block font-semibold mb-1">Confirm Password</label>
+          {/* Confirm Password */}
+          <div className="relative">
+            <label className="block font-semibold mb-1 dark:text-gray-300">
+              Confirm Password
+            </label>
             <input
-              type="password"
+              type={showConfirmPassword ? "text" : "password"}
               name="confirmPassword"
               placeholder="Re-enter your password"
               value={formData.confirmPassword}
               onChange={handleChange}
-              className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border rounded-lg px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
             />
+            <span
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              className="absolute right-3 top-9 cursor-pointer text-gray-500 hover:text-gray-700 dark:text-gray-400"
+              title={
+                showConfirmPassword ? "Hide password" : "Show password"
+              }
+            >
+              {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            </span>
           </div>
 
+          {/* Submit Button */}
           <button
             type="submit"
             className="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition"
@@ -136,10 +166,10 @@ export default function Register() {
             Register
           </button>
 
-          <p className="text-center mt-4 text-gray-600">
+          <p className="text-center mt-4 text-gray-600 dark:text-gray-400">
             Already have an account?{" "}
             <span
-              onClick={() => navigate("/login")}
+              onClick={() => navigate("/")}
               className="text-blue-600 font-semibold cursor-pointer"
             >
               Login
