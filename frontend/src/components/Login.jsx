@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { Eye, EyeOff } from "lucide-react";
 import api from "../utils/api";
 
 export default function Login() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ email: "", password: "" });
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -41,6 +43,7 @@ export default function Login() {
         {error && <p className="text-red-500 text-center text-sm mt-4">{error}</p>}
 
         <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+          {/* Email Field */}
           <div>
             <label className="block text-sm font-medium mb-1 dark:text-gray-300">
               Email
@@ -56,21 +59,30 @@ export default function Login() {
             />
           </div>
 
-          <div>
+          {/* Password Field with Eye Icon */}
+          <div className="relative">
             <label className="block text-sm font-medium mb-1 dark:text-gray-300">
               Password
             </label>
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               name="password"
               value={formData.password}
               onChange={handleChange}
               placeholder="••••••••"
-              className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
+              className="w-full border rounded-md px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
               required
             />
+            <span
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-9 cursor-pointer text-gray-500 hover:text-gray-700 dark:text-gray-400"
+              title={showPassword ? "Hide password" : "Show password"}
+            >
+              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            </span>
           </div>
 
+          {/* Submit Button */}
           <button
             type="submit"
             disabled={loading}
@@ -80,6 +92,7 @@ export default function Login() {
           </button>
         </form>
 
+        {/* Register Link */}
         <div className="mt-6 text-center text-sm">
           <span className="text-gray-600 dark:text-gray-400">Don’t have an account? </span>
           <Link to="/register" className="text-blue-600 hover:underline font-medium">
