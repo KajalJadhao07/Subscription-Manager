@@ -1,3 +1,11 @@
+import Navbar from "./Navbar";
+
 export default function Dashboard() {
-  return <div className="text-center mt-20 text-lg">Dashboard Page</div>;
+  return (
+    <>
+      <Navbar />
+      <main className="pt-16 px-6">
+      </main>
+    </>
+  );
 }
