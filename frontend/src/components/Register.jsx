@@ -58,8 +58,8 @@ export default function Register() {
       });
 
       if (res.status === 200 || res.status === 201) {
-        setSuccess("Registration successful! Redirecting to login...");
-        setTimeout(() => navigate("/"), 2000);
+        setSuccess("Registration successful!");
+        setTimeout(() => navigate("/dashboard"), 2000);
       }
     } catch (err) {
       console.error("Register error:", err.response?.data || err.message);
