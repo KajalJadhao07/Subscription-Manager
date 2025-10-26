@@ -13,7 +13,7 @@ router.post('/register', async (req, res) => {
 
         const existingUser = await User.findOne({ email });
         if (existingUser) {
-            res.status(400).json({ msg: 'User already exists' });
+            return res.status(400).json({ msg: 'User already exists' }); // ✅ Added 'return'
         }
 
         const salt = await bcrypt.genSalt(10);
@@ -23,11 +23,13 @@ router.post('/register', async (req, res) => {
             name,
             email,
             password: hashedPassword
-        })
+        });
+
         const savedUser = await newUser.save();
-        res.status(201).json({ user: savedUser ,msg: 'User registered successfully' });
+        return res.status(201).json({ user: savedUser, msg: 'User registered successfully' }); // ✅ return optional here but good practice
     } catch (err) {
-        res.status(500).json({ msg: 'Server error' });
+        console.error(err);
+        return res.status(500).json({ msg: 'Server error' });
     }
 });
 
