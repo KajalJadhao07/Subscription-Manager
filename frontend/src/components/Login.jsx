@@ -1,12 +1,10 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { Eye, EyeOff } from "lucide-react";
 import api from "../utils/api";
 
 export default function Login() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ email: "", password: "" });
-  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -33,19 +31,33 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950 p-6">
-      <div className="bg-white dark:bg-gray-900 w-full max-w-md rounded-2xl shadow-lg p-8">
-        <h2 className="text-3xl font-bold text-center dark:text-white">SubManager</h2>
-        <p className="text-center text-gray-600 dark:text-gray-400 mt-2">
-          Sign in to manage your subscriptions
-        </p>
+    <div className="min-h-screen flex items-center justify-center bg-gray-900 p-4">
+      <div className="w-full max-w-md">
+        <div className="bg-gray-800 rounded-lg shadow-xl p-8">
+          {/* Icon */}
+          <div className="flex justify-center mb-6">
+            <div className="bg-blue-600 rounded-lg p-3">
+              {/* Credit Card SVG Icon */}
+              <svg className="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+              </svg>
+            </div>
+          </div>
+          
+          {/* Title */}
+          <h2 className="text-2xl font-bold text-white text-center mb-2">Welcome Back</h2>
+          <p className="text-gray-400 text-center mb-8">Sign in to manage your subscriptions</p>
 
-        {error && <p className="text-red-500 text-center text-sm mt-4">{error}</p>}
-
-        <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+          {/* Error Message */}
+          {error && (
+            <div className="mb-4 p-3 bg-red-900/50 border border-red-700 rounded-lg text-red-300 text-sm text-center">
+              {error}
+            </div>
+          )}
+        <form onSubmit={handleSubmit} className="space-y-6">
           {/* Email Field */}
           <div>
-            <label className="block text-sm font-medium mb-1 dark:text-gray-300">
+            <label className="block text-sm font-medium text-gray-300 mb-2">
               Email
             </label>
             <input
@@ -54,52 +66,46 @@ export default function Login() {
               value={formData.email}
               onChange={handleChange}
               placeholder="you@example.com"
-              className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
+              className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
               required
             />
           </div>
 
-          {/* Password Field with Eye Icon */}
-          <div className="relative">
-            <label className="block text-sm font-medium mb-1 dark:text-gray-300">
+          {/* Password Field */}
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">
               Password
             </label>
             <input
-              type={showPassword ? "text" : "password"}
+              type="password"
               name="password"
               value={formData.password}
               onChange={handleChange}
               placeholder="••••••••"
-              className="w-full border rounded-md px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
+              className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
               required
             />
-            <span
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-9 cursor-pointer text-gray-500 hover:text-gray-700 dark:text-gray-400"
-              title={showPassword ? "Hide password" : "Show password"}
-            >
-              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-            </span>
           </div>
 
           {/* Submit Button */}
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 text-white py-2 rounded-md font-medium hover:bg-blue-700 transition disabled:opacity-70"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? "Signing In..." : "Sign In"}
           </button>
         </form>
 
-        {/* Register Link */}
-        <div className="mt-6 text-center text-sm">
-          <span className="text-gray-600 dark:text-gray-400">Don’t have an account? </span>
-          <Link to="/register" className="text-blue-600 hover:underline font-medium">
+        {/* Sign up link */}
+        <div className="mt-6 text-center">
+          <span className="text-gray-400">Don't have an account? </span>
+          <Link to="/register" className="text-blue-400 hover:text-blue-300 font-medium">
             Sign up
           </Link>
         </div>
       </div>
+    </div>
     </div>
   );
 }
